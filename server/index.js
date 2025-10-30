@@ -33,7 +33,7 @@ mongoose
   .catch((err) => console.log("Mongo connection error:", err));
 
 
-app.use("/api/alive", (req, res) => {
+app.get("/api/alive", (req, res) => {
   res.send("Alive")
 })
 
