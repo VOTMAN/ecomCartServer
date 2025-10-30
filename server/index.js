@@ -11,12 +11,33 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
+app.use((req, res, next) => {
+  const start = Date.now();
+
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    console.log(
+      `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`
+    );
+    // if (Object.keys(req.body).length > 0) {
+    //   console.log("Body:", req.body);
+    // }
+  });
+
+  next();
+});
+
 mongoose
   .connect(process.env.MONGODB_URL)
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log("Mongo connection error:", err));
 
-/* ===========================
+
+app.use("/api/alive", (req, res) => {
+  res.send("Alive")
+})
+
+  /* ===========================
    GET /api/products
    Fetches products from Fake Store API
 =========================== */
